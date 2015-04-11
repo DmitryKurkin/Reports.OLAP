@@ -1,0 +1,104 @@
+<Cube
+	versionMajor="0"
+	versionMinor="15"
+	connectionString="Dsn=POS;uid=USERID;pwd=PASSWORD;"
+	userName="USERID">
+
+	<DataSet>
+		<Table name="CHECKITEM" suppressForeignKeys = "PLACEID, MADEBYUSERID, CONSUMEDBYUSERID, PARENTCHECKITEMID">
+			<Field name="SUBTOTAL"/>
+			<Field name="TOTAL"/>
+			<Field name="AMOUNT"/>
+			<Field name="TIME" function="TIMESTAMP(#)" alias="TIME_TS"/>
+		</Table>
+		<Table name="CHECK" suppressForeignKeys = "OPENATSTATIONID">
+			<Field name="NAME"/>
+		</Table>
+		<Table name="ITEM">
+			<Field name="NAME"/>
+			<Field name="CODE"/>
+		</Table>
+		<Table name="ITEMGROUP">
+			<Field name="NAME"/>
+			<Field name="SHORTNAME"/>
+			<Field name="CODE"/>
+		</Table>
+		<Table name="PLACE">
+			<Field name="CODE"/>
+		</Table>
+		<Table name="PLACEGROUP" suppressForeignKeys="ITEMGROUPID, FASTPLACEID">
+			<Field name="CODE"/>
+		</Table>
+		<Table name="DIVISION">
+			<Field name="NAME"/>
+		</Table>
+		<Table name="USER">
+			<Field name="NAME"/>
+		</Table>
+		<!--Table name="STATION" suppressForeignKeys = "STATIONBILLAT, STATIONCHECKAT, STATIONFISCALAT, STATIONREPORTAT, STATIONTRANSAT, MASTERSTATION">
+			<Field name="NAME"/>
+		</Table-->
+	</DataSet>
+	
+	<!-- NOTE 1: Measures can only come from the SAME table. Measures from different tables are NOT supported by Radar-Soft -->
+	<!-- NOTE 2: Possible values for the "aggregateFunction" attribute:
+		stInherited,
+		stCustomAggregated,
+        stCalculated,
+        stSum (DEFAULT),
+        stCount,
+        stAverage,
+        stMin,
+        stMax,
+        stVariance,
+        stVarianceB,
+        stStdDev,
+        stStdDevB,
+        stMedian,
+        stDistinctCount -->
+	<!-- NOTE 3: Possible (library-recognized) values for the "format" attribute:
+		Standard,
+		Currency (DEFAULT),
+        Short Date,
+        Short Time,
+        Percent -->
+	<!-- NOTE 4: In addition to the recognized values, the "format" attribute uses the standard .NET formatting rules (see MSDN) -->
+	<Measures>
+		<Measure sourceTable="CHECKITEM" sourceField="SUBTOTAL" displayName="Сумма" format="#,#.00 рублей" aggregateFunction="stSum"/>
+		<Measure sourceTable="CHECKITEM" sourceField="TOTAL" displayName="Выручка" format="#,#.00 рублей" aggregateFunction="stSum"/>
+		<Measure sourceTable="CHECKITEM" sourceField="AMOUNT" displayName="Количество" format="Standard" aggregateFunction="stCount"/>
+	</Measures>
+	
+	<Dimentions>
+
+		<Dimention name="Items" displayName="Группы и товары">
+			<Multilevel name="Группа-Товар">
+				<Hierarchy sourceTable="ITEMGROUP" sourceField="NAME" displayName="Группа">
+					<Attribute sourceField="CODE" displayName="Код"/>
+				</Hierarchy>
+				<Hierarchy sourceTable="ITEM" sourceField="NAME" displayName="Товар">
+					<Attribute sourceField="CODE" displayName="Код"/>
+				</Hierarchy>			
+			</Multilevel>
+			
+			<Hierarchy sourceTable="ITEMGROUP" sourceField="SHORTNAME" displayName="Группа (Псевдоним)" selfReference="true">
+				<Attribute sourceField="CODE" displayName="Код"/>
+			</Hierarchy>
+		</Dimention>
+
+		<Dimention name="Places" displayName="Залы, сотрудники...">
+			<Multilevel name="Зал-стол">
+				<Hierarchy sourceTable="PLACEGROUP" sourceField="CODE" displayName="Зал"/>
+				<Hierarchy sourceTable="PLACE" sourceField="CODE" displayName="Стол"/>
+			</Multilevel>
+			<Hierarchy sourceTable="DIVISION" sourceField="NAME" displayName="Цех"/>
+			<Hierarchy sourceTable="USER" sourceField="NAME" displayName="Сотрудник"/>
+		</Dimention>
+		
+		<Dimention name="CheckitemDate" displayName="Дата">
+			<Hierarchy sourceTable="CHECKITEM" sourceField="TIME_TS" displayName="Дата"/>
+		</Dimention>
+		
+	</Dimentions>
+	
+</Cube>

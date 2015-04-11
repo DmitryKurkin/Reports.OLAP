@@ -1,0 +1,67 @@
+<Cube
+	versionMajor="0"
+	versionMinor="15"
+	connectionString="Dsn=POS;uid=USERID;pwd=PASSWORD;"
+	userName="USERID">
+	
+	<DataSet>
+		<Table name="CLIENTGROUP">
+			<Field name="NAME"/>
+		</Table>
+		<Table name="CLIENT">
+			<Field name="NAME"/>
+			<Field name="CODE"/>
+			<Field name="CARD"/>
+		</Table>
+		<Table name="CHECK">
+			<!-- This field is just a placeholder -->
+			<Field name="NAME"/>
+		</Table>
+		<Table name="CHECKPAYMENT">
+			<Field name="TOTAL"/>
+		</Table>
+		<Table name="PAYMENT">
+			<Field name="NAME" function="CONCAT(#, CONCAT(' - ', SHORTNAME))" alias="CUSTOMNAME"/>
+		</Table>
+	</DataSet>
+	
+	<!-- NOTE 1: Measures can only come from the SAME table. Measures from different tables are NOT supported by Radar-Soft -->
+	<!-- NOTE 2: Possible values for the "aggregateFunction" attribute:
+		stInherited,
+		stCustomAggregated,
+        stCalculated,
+        stSum (DEFAULT),
+        stCount,
+        stAverage,
+        stMin,
+        stMax,
+        stVariance,
+        stVarianceB,
+        stStdDev,
+        stStdDevB,
+        stMedian,
+        stDistinctCount -->
+	<!-- NOTE 3: Possible (library-recognized) values for the "format" attribute:
+		Standard,
+		Currency (DEFAULT),
+        Short Date,
+        Short Time,
+        Percent -->
+	<!-- NOTE 4: In addition to the recognized values, the "format" attribute uses the standard .NET formatting rules (see MSDN) -->
+	<Measures>
+		<Measure sourceTable="CHECKPAYMENT" sourceField="TOTAL" displayName="Средняя сумма" aggregateFunction="stAverage" format="#,#.00"/>
+	</Measures>
+	
+	<Dimentions>
+		<Dimention name="Names" displayName="Имена групп/клентов и названия платежей">
+			<Multilevel name="Имя группы-Имя клиента-Название платежа">
+				<Hierarchy sourceTable="CLIENTGROUP" sourceField="NAME" displayName="Имя группы"/>
+				<Hierarchy sourceTable="CLIENT" sourceField="NAME" displayName="Имя клиента">
+					<Attribute sourceField="CARD" displayName="Карта клиента"/>
+				</Hierarchy>
+				<Hierarchy sourceTable="PAYMENT" sourceField="CUSTOMNAME" displayName="Название платежа"/>
+			</Multilevel>
+		</Dimention>
+	</Dimentions>
+	
+</Cube>

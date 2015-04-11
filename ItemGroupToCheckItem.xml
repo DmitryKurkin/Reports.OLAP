@@ -1,0 +1,80 @@
+<Cube
+	versionMajor="0"
+	versionMinor="15"
+	connectionString="Dsn=POS;uid=USERID;pwd=PASSWORD;"
+	userName="USERID">
+	
+	<DataSet>
+		<Table name="CHECKITEM" suppressForeignKeys="PARENTCHECKITEMID">
+			<Field name="PRICE"/>
+			<Field name="MEASUREID" function="CAST((SELECT NAME FROM MEASURE WHERE MEASUREID = #) AS CHAR(10))" alias="MEASURE"/>
+			<Field name="TOTAL"/>
+			<Field name="AMOUNT"/>
+			<Field name="TIME" function="TIMESTAMP(#)" alias="TIME_TS"/>
+		</Table>
+		<Table name="ITEM">
+			<Field name="NAME"/>
+			<Field name="CODE"/>
+		</Table>
+		<Table name="ITEMGROUP">
+			<Field name="NAME"/>
+			<Field name="SHORTNAME"/>
+			<Field name="CODE"/>
+		</Table>
+	</DataSet>
+	
+	<!-- NOTE 1: Measures can only come from the SAME table. Measures from different tables are NOT supported by Radar-Soft -->
+	<!-- NOTE 2: Possible values for the "aggregateFunction" attribute:
+		stInherited,
+		stCustomAggregated,
+        stCalculated,
+        stSum (DEFAULT),
+        stCount,
+        stAverage,
+        stMin,
+        stMax,
+        stVariance,
+        stVarianceB,
+        stStdDev,
+        stStdDevB,
+        stMedian,
+        stDistinctCount -->
+	<!-- NOTE 3: Possible (library-recognized) values for the "format" attribute:
+		Standard,
+		Currency (DEFAULT),
+        Short Date,
+        Short Time,
+        Percent -->
+	<!-- NOTE 4: In addition to the recognized values, the "format" attribute uses the standard .NET formatting rules (see MSDN) -->
+	<Measures>
+		<Measure sourceTable="CHECKITEM" sourceField="PRICE" displayName="Цена" format="#,#.00 рублей"/>
+		<Measure sourceTable="CHECKITEM" sourceField="TOTAL" displayName="Сумма" format="#,#.00 рублей" aggregateFunction="stSum"/>
+		<Measure sourceTable="CHECKITEM" sourceField="AMOUNT" displayName="Количество" format="Standard" aggregateFunction="stCount"/>
+	</Measures>
+	
+	<Dimentions>
+
+		<Dimention name="Items" displayName="Группы и товары">
+			<Multilevel name="Группа-Товар">
+				<Hierarchy sourceTable="ITEMGROUP" sourceField="NAME" displayName="Группа">
+					<Attribute sourceField="CODE" displayName="Код группы"/>
+				</Hierarchy>
+				<Hierarchy sourceTable="ITEM" sourceField="NAME" displayName="Товар">
+					<Attribute sourceField="CODE" displayName="Код клиента"/>
+				</Hierarchy>
+			</Multilevel>
+
+			<Hierarchy sourceTable="ITEMGROUP" sourceField="SHORTNAME" displayName="Группа (Псевдоним)" selfReference="true">
+				<Attribute sourceField="CODE" displayName="Код"/>
+			</Hierarchy>
+
+			<Hierarchy sourceTable="CHECKITEM" sourceField="MEASURE" displayName="Ед.изм."/>
+		</Dimention>
+		
+		<Dimention name="CheckitemDate" displayName="Дата">
+			<Hierarchy sourceTable="CHECKITEM" sourceField="TIME_TS" displayName="Дата"/>
+		</Dimention>
+		
+	</Dimentions>
+	
+</Cube>

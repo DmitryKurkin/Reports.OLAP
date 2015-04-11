@@ -1,0 +1,76 @@
+<Cube
+	versionMajor="0"
+	versionMinor="15"
+	connectionString="Dsn=POS;uid=USERID;pwd=PASSWORD;"
+	userName="USERID">
+	
+	<DataSet>
+		<!-- 1. The Join can be used when two tables (LEFT and RIGHT) are related as either 1-to-1 or 1-to-N -->
+		<!-- 2. In order for the Join to succeed, the PK name in the LEFT table must be equal to the FK name in the RIGHT table
+			(e.g. checkitem.CHECKITEMID = checkdiscount.CHECKITEMID) -->
+		<!-- 3. An 'LEFT OUTER JOIN' is used to join the RIGHT table with the LEFT table -->
+		<!-- 4. The Join REMOVES the PK of the RIGHT table. The PK of the result table becomes the one of the LEFT table.
+			As a consequence, ALL RELATIONS (FKs) that use the RIGHT table as the PARENT one will be DESTROYED -->
+		<!-- 5. All FKs of both the LEFT and RIGHT tables get moved to the result one unless this contradicts to rule #4 -->
+		<!-- 6. Don't forget to add field name aliases in the RIGHT table definition if this causes a field name collision in the result table -->
+		<Join alias="CHECKITEM_CHECKDISCOUNT" left="CHECKITEM" right="CHECKDISCOUNT">
+			<Table name="CHECKITEM">
+				<Field name="TOTAL"/>
+				<Field name="AMOUNT"/>
+				<Field name="PRICE" function="CONCAT(TRIM(L '0' FROM CHAR(#)), CONCAT(', ', CAST((SELECT NAME FROM MEASURE WHERE MEASUREID = CHECKITEM.MEASUREID) AS CHAR(10))))" alias="PRICEMEASURE"/>
+				<Field name="TIME" function="TIMESTAMP(#)" alias="TIME_TS"/>
+			</Table>
+			<Table name="CHECKDISCOUNT" suppressForeignKeys="DISCOUNTID">
+				<Field name="TOTAL" alias="CHECKDISCOUNT_TOTAL"/>
+				<Field name="PERCENT"/>
+			</Table>
+		</Join>
+		<Table name="ITEM">
+			<Field name="NAME" function="CONCAT(#, CONCAT(' - ', CAST(CODE AS CHAR(10))))" alias="CUSTOMNAME"/>
+			<Field name="CODE"/>
+		</Table>
+		<Table name="ITEMGROUP">
+			<Field name="NAME" function="CONCAT(#, CONCAT(' - ', CAST(CODE AS CHAR(10))))" alias="CUSTOMNAME"/>
+			<Field name="SHORTNAME"/>
+			<Field name="CODE"/>
+		</Table>
+		<Table name="DISCOUNT" suppressForeignKeys="ITEMGROUPID, BONUSITEMID, ITEMID, EXISTITEMID, EXISTITEMGROUPID, ALLOWITEMGROUPID">
+			<Field name="NAME"/>
+		</Table>
+	</DataSet>
+	
+	<!-- NOTE: Measures can only come from the SAME table. Measures from different tables are NOT supported by Radar-Soft -->
+	<Measures>
+		<Measure sourceTable="CHECKITEM_CHECKDISCOUNT" sourceField="TOTAL" displayName="Сумма" format="#,0.00 рублей"/>
+		<Measure sourceTable="CHECKITEM_CHECKDISCOUNT" sourceField="AMOUNT" displayName="Количество" format="#,# шт"/>
+		<Measure sourceTable="CHECKITEM_CHECKDISCOUNT" sourceField="CHECKDISCOUNT_TOTAL" displayName="Сумма (Скидка)" format="#,0.00 рублей"/>
+		<Measure sourceTable="CHECKITEM_CHECKDISCOUNT" sourceField="PERCENT" displayName="Процент (Скидка)" format="Percent"/>
+	</Measures>
+	
+	<Dimentions>
+	
+		<Dimention name="Names" displayName="Группы и товары">
+			<Multilevel name="Имя группы-Имя товара">
+				<Hierarchy sourceTable="ITEMGROUP" sourceField="CUSTOMNAME" displayName="Имя группы"/>
+				<Hierarchy sourceTable="ITEM" sourceField="CUSTOMNAME" displayName="Имя товара"/>
+			</Multilevel>
+
+			<Multilevel name="Имя товара - единица измерения">
+				<Hierarchy sourceTable="ITEM" sourceField="CUSTOMNAME" displayName="Товар"/>
+				<Hierarchy sourceTable="CHECKITEM_CHECKDISCOUNT" sourceField="PRICEMEASURE" displayName="Цена, ед. изм"/>
+			</Multilevel>
+
+			<Hierarchy sourceTable="ITEMGROUP" sourceField="SHORTNAME" displayName="Группа (Псевдоним)" selfReference="true"/>
+		</Dimention>
+		
+		<Dimention name="Discounts" displayName="Скидки">
+   			<Hierarchy sourceTable="CHECKITEM_CHECKDISCOUNT" sourceField="PERCENT" displayName="Процент"/>
+   			<Hierarchy sourceTable="DISCOUNT" sourceField="NAME" displayName="Скидка"/>
+  		</Dimention>
+  
+		<Dimention name="CheckitemDate" displayName="Дата">
+			<Hierarchy sourceTable="CHECKITEM_CHECKDISCOUNT" sourceField="TIME_TS" displayName="Дата"/>
+		</Dimention>
+	</Dimentions>
+	
+</Cube>

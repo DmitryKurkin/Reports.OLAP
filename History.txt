@@ -1,0 +1,10 @@
+v0.2.0.0:
+	-- 'Edit Cube Structure' button added
+	-- Merge operation uses LEFT OUTER JOIN statement
+	-- Merge operation renamed to Join
+	-- Hierarchy attributes supported
+
+v0.3.0.0:
+	-- Other than RadarSoft-based projects removed
+	-- RadarSoft v3.3.0.0 used
+	-- All hierarchies sorted in ascending mode

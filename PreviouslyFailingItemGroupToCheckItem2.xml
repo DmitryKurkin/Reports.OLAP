@@ -1,0 +1,78 @@
+<Cube
+	versionMajor="0"
+	versionMinor="15"
+	connectionString="Dsn=POS;uid=USERID;pwd=PASSWORD;"
+	userName="USERID">
+	
+	<DataSet>
+		<Table name="CHECKITEM">
+			<Field name="PRICE"/>
+			<Field name="TOTAL"/>
+			<Field name="SUBTOTAL"/>
+			<Field name="AMOUNT"/>
+			<Field name="TIME" function="TIMESTAMP(#)" alias="TIME_TS"/>
+		</Table>
+		<Table name="ITEM">
+			<Field name="NAME" function="CONCAT(#, CONCAT(' - ', CAST(CODE AS CHAR(10))))" alias="CUSTOMNAME"/>
+			<Field name="CODE"/>
+		</Table>
+		<Table name="ITEMGROUP">
+			<Field name="NAME" function="CONCAT(#, CONCAT(' - ', CAST(CODE AS CHAR(10))))" alias="CUSTOMNAME"/>
+			<Field name="SHORTNAME"/>
+			<Field name="CODE"/>
+		</Table>
+		<Table name="MEASURE">
+			<Field name="NAME"/>
+			<Field name="CODE"/>
+		</Table>
+		<Table name="DIVISION">
+			<Field name="NAME"/>
+		</Table>
+		<Table name="PLACE">
+			<Field name="CODE"/>
+		</Table>
+		<Table name="PLACEGROUP" suppressForeignKeys="ITEMGROUPID, FASTPLACEID">
+			<Field name="CODE"/>
+		</Table>
+	</DataSet>
+	
+	<!-- NOTE: Measures can only come from the SAME table. Measures from different tables are NOT supported by Radar-Soft -->
+	<Measures>
+		<Measure sourceTable="CHECKITEM" sourceField="PRICE" displayName="Цена"/>
+		<Measure sourceTable="CHECKITEM" sourceField="TOTAL" displayName="Сумма"/>
+		<Measure sourceTable="CHECKITEM" sourceField="SUBTOTAL" displayName="Сумма без скидки"/>
+		<Measure sourceTable="CHECKITEM" sourceField="AMOUNT" displayName="Количество"/>
+	</Measures>
+	
+	<Dimentions>
+	
+		<Dimention name="Names" displayName="Группы и товары">
+			
+			<Multilevel name="Имя группы-Имя товара">
+				<Hierarchy sourceTable="ITEMGROUP" sourceField="CUSTOMNAME" displayName="Имя группы"/>
+				<Hierarchy sourceTable="ITEM" sourceField="CUSTOMNAME" displayName="Имя товара"/>
+			</Multilevel>
+			
+			<Multilevel name="Код группы-Код товара">
+				<Hierarchy sourceTable="ITEMGROUP" sourceField="CODE" displayName="Код группы"/>
+				<Hierarchy sourceTable="ITEM" sourceField="CODE" displayName="Код товара"/>
+			</Multilevel>
+
+			<Multilevel name="Зал и стол">
+				<Hierarchy sourceTable="PLACEGROUP" sourceField="CODE" displayName="Зал"/>
+				<Hierarchy sourceTable="PLACE" sourceField="CODE" displayName="Стол"/>
+			</Multilevel>
+			
+			<Hierarchy sourceTable="ITEMGROUP" sourceField="SHORTNAME" displayName="Группа (Псевдоним)" selfReference="true"/>
+        	<Hierarchy sourceTable="MEASURE" sourceField="NAME" displayName="Разм."/>
+        	<Hierarchy sourceTable="DIVISION" sourceField="NAME" displayName="Цех"/>
+        	
+		</Dimention>
+		
+		<Dimention name="CheckitemDate" displayName="Дата">
+			<Hierarchy sourceTable="CHECKITEM" sourceField="TIME_TS" displayName="Дата"/>
+		</Dimention>
+		
+	</Dimentions>
+	
+</Cube>
