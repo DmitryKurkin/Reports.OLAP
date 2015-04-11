@@ -22,6 +22,8 @@
             InitializeComponent();
 
             _dbBridge = new OdbcDatabaseBridge();
+
+            DataSetDescriptorBuilder.FilterProvider = new PrimitiveExternalFilterProvider();
         }
 
         public TOLAPCube Cube { get; private set; }
@@ -41,6 +43,8 @@
             if (openFileDialog.ShowDialog(this) == DialogResult.OK)
             {
                 textBoxCubeFilePath.Text = openFileDialog.FileName;
+                
+                DataSetDescriptorBuilder.FilterProvider.Reset();
             }
         }
 

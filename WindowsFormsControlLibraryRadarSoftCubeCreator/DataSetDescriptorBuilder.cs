@@ -11,10 +11,17 @@
     {
         private const int MajorVersion = 0;
 
-        private const int MinorVersion = 15;
+        private const int MinorVersion = 16;
+
+        public static IExternalFilterProvider FilterProvider { get; set; }
 
         public static DataSetDescriptor Build(string contents)
         {
+            if (FilterProvider == null)
+            {
+                throw new InvalidOperationException("The filter provider is not set");
+            }
+
             var doc = XElement.Parse(contents);
 
             ValidateVersion(doc);
@@ -111,10 +118,22 @@
 
             foreach (var f in e.Descendants(ns + "Field"))
             {
+                var fieldName = (string)f.Attribute("name");
+                var fieldAlias = (string)f.Attribute("alias");
+
+                string filter = null;
+
+                var externalFilter = (string)f.Attribute("externalFilter");
+                if (externalFilter != null && externalFilter == "true")
+                {
+                    filter = FilterProvider.GetFilter(table.Name, fieldName, fieldAlias);
+                }
+
                 var field = new FieldDescriptor(
-                    (string)f.Attribute("name"),
-                    alias: (string)f.Attribute("alias"),
-                    function: (string)f.Attribute("function"));
+                    fieldName,
+                    alias: fieldAlias,
+                    function: (string)f.Attribute("function"),
+                    filter: filter);
 
                 table.AddField(field);
             }

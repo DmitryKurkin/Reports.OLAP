@@ -9,7 +9,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsControlLibraryR
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BB755D7E-6AC3-4322-B40B-DFB8773C0158}"
 	ProjectSection(SolutionItems) = preProject
+		ClientGroupToPayment.xml = ClientGroupToPayment.xml
+		DiscountToCheckItem.xml = DiscountToCheckItem.xml
 		History.txt = History.txt
+		ItemGroupToCheckItem.xml = ItemGroupToCheckItem.xml
+		PreviouslyFailingItemGroupToCheckItem2.xml = PreviouslyFailingItemGroupToCheckItem2.xml
+		Сводный отчёт по товарам (группировка по группам).xml = Сводный отчёт по товарам (группировка по группам).xml
 	EndProjectSection
 EndProject
 Global

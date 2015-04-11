@@ -1,6 +1,6 @@
 <Cube
 	versionMajor="0"
-	versionMinor="15"
+	versionMinor="16"
 	connectionString="Dsn=POS;uid=USERID;pwd=PASSWORD;"
 	userName="USERID">
 	
@@ -18,7 +18,7 @@
 				<Field name="TOTAL"/>
 				<Field name="AMOUNT"/>
 				<Field name="PRICE" function="CONCAT(TRIM(L '0' FROM CHAR(#)), CONCAT(', ', CAST((SELECT NAME FROM MEASURE WHERE MEASUREID = CHECKITEM.MEASUREID) AS CHAR(10))))" alias="PRICEMEASURE"/>
-				<Field name="TIME" function="TIMESTAMP(#)" alias="TIME_TS"/>
+				<Field name="TIME" function="TIMESTAMP(#)" alias="TIME_TS" externalFilter="true"/>
 			</Table>
 			<Table name="CHECKDISCOUNT" suppressForeignKeys="DISCOUNTID">
 				<Field name="TOTAL" alias="CHECKDISCOUNT_TOTAL"/>

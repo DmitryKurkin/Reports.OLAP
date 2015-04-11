@@ -1,6 +1,6 @@
 <Cube
 	versionMajor="0"
-	versionMinor="15"
+	versionMinor="16"
 	connectionString="Dsn=POS;uid=USERID;pwd=PASSWORD;"
 	userName="USERID">
 

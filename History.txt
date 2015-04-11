@@ -8,3 +8,6 @@ v0.3.0.0:
 	-- Other than RadarSoft-based projects removed
 	-- RadarSoft v3.3.0.0 used
 	-- All hierarchies sorted in ascending mode
+
+v0.4.0.0:
+	-- 'externalFilter' field attribute supported

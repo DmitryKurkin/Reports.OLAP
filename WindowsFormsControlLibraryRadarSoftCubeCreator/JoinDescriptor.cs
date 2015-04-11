@@ -92,31 +92,38 @@
             throw new NotSupportedException();
         }
 
+        public override string BuildWhereExpression()
+        {
+            var filter = new StringBuilder();
+            
+            var leftTableFilter = LeftTable.BuildWhereExpression();
+            var rightTableFilter = RightTable.BuildWhereExpression();
+            
+            if (!string.IsNullOrWhiteSpace(leftTableFilter) || !string.IsNullOrWhiteSpace(rightTableFilter))
+            {
+                if (!string.IsNullOrWhiteSpace(leftTableFilter))
+                {
+                    filter.Append(leftTableFilter);
+
+                    if (!string.IsNullOrWhiteSpace(rightTableFilter))
+                    {
+                        filter.AppendFormat(" AND {0}", rightTableFilter);
+                    }
+                }
+                else
+                {
+                    filter.Append(rightTableFilter);
+                }
+            }
+
+            return filter.ToString();
+        }
+
         public override string BuildSql()
         {
             var fields = string.Join(
                 ", ",
                 LeftTable.Fields.Values.Select(f => f.BuildSql()).Concat(RightTable.Fields.Values.Select(f => f.BuildSql())));
-
-            var filter = new StringBuilder();
-            if (LeftTable.Filter != null || RightTable.Filter != null)
-            {
-                filter.Append(" WHERE ");
-
-                if (LeftTable.Filter != null)
-                {
-                    filter.Append(LeftTable.Filter);
-
-                    if (RightTable.Filter != null)
-                    {
-                        filter.AppendFormat(" AND {0}", RightTable.Filter);
-                    }
-                }
-                else
-                {
-                    filter.Append(RightTable.Filter);
-                }
-            }
 
             var leftJoinField = LeftTable.PrimaryKey;
             if (leftJoinField == null)
@@ -131,7 +138,12 @@
                 throw new InvalidOperationException("Right table does not have a foreign key that references the left table: " + RightTable.Name);
             }
 
-            var joinExpression = string.Format("{0} = {1}", leftJoinField.TableQualifiedName, rightJoinField.TableQualifiedName);
+            var joinExpression = string.Format(
+                "{0} = {1}",
+                leftJoinField.TableQualifiedName,
+                rightJoinField.TableQualifiedName);
+
+            var whereExpression = BuildWhereExpression();
 
             var sql = string.Format(
                 "SELECT {0} FROM {1} LEFT OUTER JOIN {2} ON {3}{4}",
@@ -139,7 +151,7 @@
                 LeftTable.Name,
                 RightTable.Name,
                 joinExpression,
-                filter);
+                string.IsNullOrWhiteSpace(whereExpression) ? string.Empty : string.Format(" WHERE {0}", whereExpression));
 
             return sql;
         }

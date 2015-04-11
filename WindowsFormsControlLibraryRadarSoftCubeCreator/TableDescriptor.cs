@@ -1,7 +1,9 @@
 ﻿namespace WindowsFormsControlLibraryRadarSoftCubeCreator
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
 
     public class TableDescriptor
     {
@@ -58,13 +60,42 @@
             field.ParentTable = this;
         }
 
+        public virtual string BuildWhereExpression()
+        {
+            var whereClause = new StringBuilder();
+
+            var fieldsFilters = _fields.Values.Where(fd => fd.Filter != null).Select(fd => fd.Filter).ToArray();
+
+            if (Filter != null || fieldsFilters.Length > 0)
+            {
+                if (Filter != null)
+                {
+                    whereClause.Append(Filter);
+                }
+
+                if (fieldsFilters.Length > 0)
+                {
+                    if (Filter != null)
+                    {
+                        whereClause.Append(" AND ");
+                    }
+
+                    whereClause.Append(string.Join(" AND ", fieldsFilters));
+                }
+            }
+
+            return whereClause.ToString();
+        }
+
         public virtual string BuildSql()
         {
+            var whereExpression = BuildWhereExpression();
+
             var sql = string.Format(
                 "SELECT {0} FROM {1}{2}",
                 string.Join(", ", _fields.Values.Select(f => f.BuildSql())),
                 Name,
-                Filter == null ? string.Empty : string.Format(" WHERE {0}", Filter));
+                string.IsNullOrWhiteSpace(whereExpression) ? string.Empty : string.Format(" WHERE {0}", whereExpression));
 
             return sql;
         }

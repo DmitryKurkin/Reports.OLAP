@@ -9,12 +9,14 @@
             string name,
             string alias = null,
             string function = null,
+            string filter = null,
             bool isPrimaryKey = false,
             FieldDescriptor foreignKeyReference = null)
         {
             Name = name;
             Alias = alias;
             Function = function;
+            Filter = filter;
             IsPrimaryKey = isPrimaryKey;
             ForeignKeyReference = foreignKeyReference;
         }
@@ -24,6 +26,8 @@
         public string Alias { get; private set; }
 
         public string Function { get; private set; }
+
+        public string Filter { get; private set; }
 
         public bool IsPrimaryKey { get; private set; }
 
@@ -54,7 +58,13 @@
 
         public object Clone()
         {
-            var descriptor = new FieldDescriptor(Name, Alias, Function, IsPrimaryKey, ForeignKeyReference);
+            var descriptor = new FieldDescriptor(
+                Name,
+                Alias,
+                Function,
+                Filter,
+                IsPrimaryKey,
+                ForeignKeyReference);
 
             return descriptor;
         }

@@ -59,9 +59,17 @@
     <Compile Include="DataSetDescriptorBuilder.cs" />
     <Compile Include="FieldDescriptor.cs" />
     <Compile Include="IDatabaseBridge.cs" />
+    <Compile Include="IExternalFilterProvider.cs" />
     <Compile Include="JoinDescriptor.cs" />
     <Compile Include="OdbcDatabaseBridge.cs" />
+    <Compile Include="PrimitiveExternalFilterProvider.cs" />
     <Compile Include="TableDescriptor.cs" />
+    <Compile Include="TimestampFilterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TimestampFilterForm.Designer.cs">
+      <DependentUpon>TimestampFilterForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControlRadarSoftCubeCreator.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -72,6 +80,9 @@
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="TimestampFilterForm.resx">
+      <DependentUpon>TimestampFilterForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UserControlRadarSoftCubeCreator.resx">
       <DependentUpon>UserControlRadarSoftCubeCreator.cs</DependentUpon>
     </EmbeddedResource>
