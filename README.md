@@ -5,6 +5,7 @@ RadarSoft-based reporting tool
 The current version is 0.4.0.0
 
 Notes for XML authors:
+----------------------
 
 1. Measures can only come from the SAME table. Measures from different tables are NOT supported by Radar-Soft.
  Example (GOOD):
