@@ -7,16 +7,20 @@ Notes for XML authors:
 1. Measures can only come from the SAME table. Measures from different tables are NOT supported by Radar-Soft.
 
 Example (GOOD):
-  <Measures>
-		<Measure sourceTable="SOME_TABLE" .../>
-		<Measure sourceTable="SOME_TABLE" .../>
-	</Measures>
+```xml
+<Measures>
+	<Measure sourceTable="SOME_TABLE" .../>
+	<Measure sourceTable="SOME_TABLE" .../>
+</Measures>
+```
 
 Example (BAD):
-  <Measures>
-		<Measure sourceTable="SOME_TABLE" .../>
-		<Measure sourceTable="SOME_OTHER_TABLE" .../>
-	</Measures>
+```xml
+<Measures>
+	<Measure sourceTable="SOME_TABLE" .../>
+	<Measure sourceTable="SOME_OTHER_TABLE" .../>
+</Measures>
+```
 
 2. Possible values for the "aggregateFunction" attribute:
   - stInherited
@@ -35,7 +39,9 @@ Example (BAD):
   - stDistinctCount
 
 Example:
+```xml
 <Measure ... aggregateFunction="stAverage" .../>
+```
 
 3. Possible (library-recognized) values for the "format" attribute:
   - Standard
@@ -45,17 +51,23 @@ Example:
   - Percent
 
 Example:
+```xml
 <Measure ... format="Short Date" .../>
+```
 
 4. In addition to the recognized values, the "format" attribute uses the standard .NET formatting rules (see MSDN: https://msdn.microsoft.com/en-us/library/0c899ak8(v=vs.110).aspx)
 
 Example:
+```xml
 <Measure ... format="#,#.00" .../>
+```
 
 5. Symbol '#' must be used in the "function" attribute in order to substitute the corresponding field name. The "alias" attribute is always required when the "function" attribute is used.
 
 Example:
+```xml
 <Field name="SOME_FIELD" function="TRIM(L '0' FROM CHAR(#))" alias="PROCESSED_FIELD" .../>
+```
 
 6. The rules for the JOIN construct:
   a. The Join can be used when two tables (LEFT and RIGHT) are related as either 1-to-1 or 1-to-N
