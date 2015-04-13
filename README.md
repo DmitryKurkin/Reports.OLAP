@@ -8,6 +8,7 @@ Notes for XML authors:
 ----------------------
 
 1. Measures can only come from the SAME table. Measures from different tables are NOT supported by Radar-Soft.
+
  Example (GOOD):
  ```xml
  <Measures>
@@ -77,3 +78,9 @@ Notes for XML authors:
   4. The Join REMOVES the PK of the RIGHT table. The PK of the result table becomes the one of the LEFT table. As a consequence, ALL RELATIONS (FKs) that use the RIGHT table as the PARENT one will be DESTROYED
   5. All FKs of both the LEFT and RIGHT tables get moved to the result one unless this contradicts to rule #4
   6. Field name aliases must be used in the RIGHT table definition if this causes field name collisions in the result table
+
+7. In order to ask the user to filter a timestap-based column (the timestamp data type is only supported at the moment), use the "externalFilter" attribute.
+ Example:
+ ```xml
+ <Field name="SOME_TIMESTAMP" externalFilter="true" .../>
+ ```
