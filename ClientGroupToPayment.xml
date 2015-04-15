@@ -1,8 +1,6 @@
 <Cube
 	versionMajor="0"
-	versionMinor="16"
-	connectionString="Dsn=POS;uid=USERID;pwd=PASSWORD;"
-	userName="USERID">
+	versionMinor="16">
 	
 	<DataSet>
 		<Table name="CLIENTGROUP">
@@ -25,29 +23,6 @@
 		</Table>
 	</DataSet>
 	
-	<!-- NOTE 1: Measures can only come from the SAME table. Measures from different tables are NOT supported by Radar-Soft -->
-	<!-- NOTE 2: Possible values for the "aggregateFunction" attribute:
-		stInherited,
-		stCustomAggregated,
-        stCalculated,
-        stSum (DEFAULT),
-        stCount,
-        stAverage,
-        stMin,
-        stMax,
-        stVariance,
-        stVarianceB,
-        stStdDev,
-        stStdDevB,
-        stMedian,
-        stDistinctCount -->
-	<!-- NOTE 3: Possible (library-recognized) values for the "format" attribute:
-		Standard,
-		Currency (DEFAULT),
-        Short Date,
-        Short Time,
-        Percent -->
-	<!-- NOTE 4: In addition to the recognized values, the "format" attribute uses the standard .NET formatting rules (see MSDN) -->
 	<Measures>
 		<Measure sourceTable="CHECKPAYMENT" sourceField="TOTAL" displayName="Средняя сумма" aggregateFunction="stAverage" format="#,#.00"/>
 	</Measures>
