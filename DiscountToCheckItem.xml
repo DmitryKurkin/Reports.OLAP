@@ -1,18 +1,8 @@
 <Cube
 	versionMajor="0"
-	versionMinor="16"
-	connectionString="Dsn=POS;uid=USERID;pwd=PASSWORD;"
-	userName="USERID">
+	versionMinor="16">
 	
 	<DataSet>
-		<!-- 1. The Join can be used when two tables (LEFT and RIGHT) are related as either 1-to-1 or 1-to-N -->
-		<!-- 2. In order for the Join to succeed, the PK name in the LEFT table must be equal to the FK name in the RIGHT table
-			(e.g. checkitem.CHECKITEMID = checkdiscount.CHECKITEMID) -->
-		<!-- 3. An 'LEFT OUTER JOIN' is used to join the RIGHT table with the LEFT table -->
-		<!-- 4. The Join REMOVES the PK of the RIGHT table. The PK of the result table becomes the one of the LEFT table.
-			As a consequence, ALL RELATIONS (FKs) that use the RIGHT table as the PARENT one will be DESTROYED -->
-		<!-- 5. All FKs of both the LEFT and RIGHT tables get moved to the result one unless this contradicts to rule #4 -->
-		<!-- 6. Don't forget to add field name aliases in the RIGHT table definition if this causes a field name collision in the result table -->
 		<Join alias="CHECKITEM_CHECKDISCOUNT" left="CHECKITEM" right="CHECKDISCOUNT">
 			<Table name="CHECKITEM">
 				<Field name="TOTAL"/>
@@ -39,7 +29,6 @@
 		</Table>
 	</DataSet>
 	
-	<!-- NOTE: Measures can only come from the SAME table. Measures from different tables are NOT supported by Radar-Soft -->
 	<Measures>
 		<Measure sourceTable="CHECKITEM_CHECKDISCOUNT" sourceField="TOTAL" displayName="Сумма" format="#,0.00 рублей"/>
 		<Measure sourceTable="CHECKITEM_CHECKDISCOUNT" sourceField="AMOUNT" displayName="Количество" format="#,# шт"/>
