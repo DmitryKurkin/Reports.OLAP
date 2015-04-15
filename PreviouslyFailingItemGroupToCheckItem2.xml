@@ -1,8 +1,6 @@
 <Cube
 	versionMajor="0"
-	versionMinor="16"
-	connectionString="Dsn=POS;uid=USERID;pwd=PASSWORD;"
-	userName="USERID">
+	versionMinor="16">
 	
 	<DataSet>
 		<Table name="CHECKITEM">
@@ -36,7 +34,6 @@
 		</Table>
 	</DataSet>
 	
-	<!-- NOTE: Measures can only come from the SAME table. Measures from different tables are NOT supported by Radar-Soft -->
 	<Measures>
 		<Measure sourceTable="CHECKITEM" sourceField="PRICE" displayName="Цена"/>
 		<Measure sourceTable="CHECKITEM" sourceField="TOTAL" displayName="Сумма"/>
