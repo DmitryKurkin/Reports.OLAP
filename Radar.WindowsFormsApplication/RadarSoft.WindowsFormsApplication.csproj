@@ -7,9 +7,9 @@
     <ProjectGuid>{A67DD850-F6AB-4935-B0F2-AF41344F5F45}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WindowsFormsApplication1</RootNamespace>
-    <AssemblyName>WindowsFormsApplication1</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <RootNamespace>Reporting.PresentationLogic</RootNamespace>
+    <AssemblyName>Reporting.PresentationLogic</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
@@ -33,7 +33,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\Desktop\Новая папка\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -130,6 +130,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Reporting.BusinessLogic\Reporting.BusinessLogic.csproj">
+      <Project>{b11ead8a-4eeb-4ca4-bd84-de446574a3e9}</Project>
+      <Name>Reporting.BusinessLogic</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WindowsFormsControlLibraryRadarSoftCubeCreator\WindowsFormsControlLibraryRadarSoftCubeCreator.csproj">
       <Project>{6B1FE7D9-3372-4531-90BD-52067FE65198}</Project>
       <Name>WindowsFormsControlLibraryRadarSoftCubeCreator</Name>
