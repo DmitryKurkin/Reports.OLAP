@@ -4,6 +4,8 @@
     using System.Text;
     using System.Windows.Forms;
 
+    using Reporting.BusinessLogic;
+
     /// <summary>
     /// Provides the implementation of the <see cref="IExternalFilterProvider"/> interface that is able to build a filter for the TIMESTAMP data format only
     /// </summary>

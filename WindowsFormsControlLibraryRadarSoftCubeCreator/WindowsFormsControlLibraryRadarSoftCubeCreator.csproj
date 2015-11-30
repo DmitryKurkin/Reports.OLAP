@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WindowsFormsControlLibraryRadarSoftCubeCreator</RootNamespace>
     <AssemblyName>WindowsFormsControlLibraryRadarSoftCubeCreator</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -55,15 +55,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataSetDescriptor.cs" />
-    <Compile Include="DataSetDescriptorBuilder.cs" />
-    <Compile Include="FieldDescriptor.cs" />
-    <Compile Include="IDatabaseBridge.cs" />
-    <Compile Include="IExternalFilterProvider.cs" />
-    <Compile Include="JoinDescriptor.cs" />
     <Compile Include="OdbcDatabaseBridge.cs" />
     <Compile Include="PrimitiveExternalFilterProvider.cs" />
-    <Compile Include="TableDescriptor.cs" />
     <Compile Include="TimestampFilterForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -86,6 +79,16 @@
     <EmbeddedResource Include="UserControlRadarSoftCubeCreator.resx">
       <DependentUpon>UserControlRadarSoftCubeCreator.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Reporting.BusinessLogic.RadarSoft\Reporting.BusinessLogic.RadarSoft.csproj">
+      <Project>{1cc6bad8-79fd-4f86-9ba2-d2bdaf11488f}</Project>
+      <Name>Reporting.BusinessLogic.RadarSoft</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Reporting.BusinessLogic\Reporting.BusinessLogic.csproj">
+      <Project>{b11ead8a-4eeb-4ca4-bd84-de446574a3e9}</Project>
+      <Name>Reporting.BusinessLogic</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

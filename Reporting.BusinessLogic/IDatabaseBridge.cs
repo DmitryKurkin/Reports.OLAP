@@ -1,4 +1,4 @@
-﻿namespace WindowsFormsControlLibraryRadarSoftCubeCreator
+﻿namespace Reporting.BusinessLogic
 {
     using System.Data;
     using System.Data.Common;

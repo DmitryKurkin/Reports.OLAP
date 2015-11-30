@@ -1,4 +1,4 @@
-﻿namespace WindowsFormsControlLibraryRadarSoftCubeCreator
+﻿namespace Reporting.BusinessLogic
 {
     public interface IExternalFilterProvider
     {

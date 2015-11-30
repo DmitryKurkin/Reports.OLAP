@@ -1,6 +1,5 @@
-﻿namespace WindowsFormsControlLibraryRadarSoftCubeCreator
+﻿namespace Reporting.BusinessLogic
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
@@ -24,26 +23,17 @@
 
         public virtual IReadOnlyDictionary<string, FieldDescriptor> Fields
         {
-            get
-            {
-                return _fields;
-            }
+            get { return _fields; }
         }
 
         public virtual FieldDescriptor PrimaryKey
         {
-            get
-            {
-                return _fields.Values.SingleOrDefault(fd => fd.IsPrimaryKey);
-            }
+            get { return _fields.Values.SingleOrDefault(fd => fd.IsPrimaryKey); }
         }
 
         public virtual IEnumerable<FieldDescriptor> ForeignKeys
         {
-            get
-            {
-                return _fields.Values.Where(fd => fd.ForeignKeyReference != null);
-            }
+            get { return _fields.Values.Where(fd => fd.ForeignKeyReference != null); }
         }
 
         public virtual List<string> SuppressForeignKeys { get; private set; }

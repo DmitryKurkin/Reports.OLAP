@@ -4,6 +4,8 @@
     using System.Data.Common;
     using System.Data.Odbc;
 
+    using Reporting.BusinessLogic;
+
     public class OdbcDatabaseBridge : IDatabaseBridge
     {
         public IDbConnection CreateConnection(string connectionString)

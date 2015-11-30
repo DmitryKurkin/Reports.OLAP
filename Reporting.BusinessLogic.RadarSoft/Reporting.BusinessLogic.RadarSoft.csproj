@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B11EAD8A-4EEB-4CA4-BD84-DE446574A3E9}</ProjectGuid>
+    <ProjectGuid>{1CC6BAD8-79FD-4F86-9BA2-D2BDAF11488F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Reporting.BusinessLogic</RootNamespace>
-    <AssemblyName>Reporting.BusinessLogic</AssemblyName>
+    <AssemblyName>Reporting.BusinessLogic.RadarSoft</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,6 +30,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="RadarSoft.WinForms">
+      <HintPath>..\packages\RadarSoft\RadarSoft.WinForms.dll</HintPath>
+    </Reference>
+    <Reference Include="RadarSoft.WinForms.Desktop">
+      <HintPath>..\packages\RadarSoft\RadarSoft.WinForms.Desktop.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -40,18 +46,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CubeConfigurationFile.cs" />
-    <Compile Include="DataSetBuilder.cs" />
-    <Compile Include="DataSetConfigurationFile.cs" />
-    <Compile Include="DataSetDescriptor.cs" />
-    <Compile Include="DataSetDescriptorBuilder.cs" />
-    <Compile Include="FieldDescriptor.cs" />
-    <Compile Include="IDatabaseBridge.cs" />
-    <Compile Include="IExternalFilterProvider.cs" />
-    <Compile Include="JoinDescriptor.cs" />
-    <Compile Include="TableDescriptor.cs" />
-    <Compile Include="UserConfiguration.cs" />
+    <Compile Include="OlapCubeBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Reporting.BusinessLogic\Reporting.BusinessLogic.csproj">
+      <Project>{b11ead8a-4eeb-4ca4-bd84-de446574a3e9}</Project>
+      <Name>Reporting.BusinessLogic</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

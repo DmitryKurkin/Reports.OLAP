@@ -1,7 +1,6 @@
-﻿namespace WindowsFormsControlLibraryRadarSoftCubeCreator
+﻿namespace Reporting.BusinessLogic
 {
     using System;
-    using System.Collections.Generic;
 
     public class FieldDescriptor : ICloneable
     {
@@ -35,18 +34,12 @@
 
         public string TableQualifiedName
         {
-            get
-            {
-                return string.Format("{0}.{1}", ParentTable.Name, Name);
-            }
+            get { return string.Format("{0}.{1}", ParentTable.Name, Name); }
         }
 
         public string AliasOrName
         {
-            get
-            {
-                return Alias ?? Name;
-            }
+            get { return Alias ?? Name; }
         }
 
         public TableDescriptor ParentTable { get; internal set; }

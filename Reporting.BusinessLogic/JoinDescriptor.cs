@@ -1,4 +1,4 @@
-﻿namespace WindowsFormsControlLibraryRadarSoftCubeCreator
+﻿namespace Reporting.BusinessLogic
 {
     using System;
     using System.Collections.Generic;
@@ -27,7 +27,7 @@
         {
             get
             {
-                var localPk = (FieldDescriptor)LeftTable.PrimaryKey.Clone();
+                var localPk = (FieldDescriptor) LeftTable.PrimaryKey.Clone();
                 localPk.ParentTable = this;
 
                 return localPk;
@@ -42,7 +42,7 @@
 
                 foreach (var fd in LeftTable.ForeignKeys.Concat(RightTable.ForeignKeys))
                 {
-                    var fdCopy = (FieldDescriptor)fd.Clone();
+                    var fdCopy = (FieldDescriptor) fd.Clone();
                     fdCopy.ParentTable = this;
 
                     localFks.Add(fdCopy);
@@ -54,10 +54,7 @@
 
         public override List<string> SuppressForeignKeys
         {
-            get
-            {
-                throw new NotSupportedException();
-            }
+            get { throw new NotSupportedException(); }
         }
 
         public override IReadOnlyDictionary<string, FieldDescriptor> Fields
@@ -68,7 +65,7 @@
 
                 foreach (var kvp in LeftTable.Fields.Concat(RightTable.Fields))
                 {
-                    var fdCopy = (FieldDescriptor)kvp.Value.Clone();
+                    var fdCopy = (FieldDescriptor) kvp.Value.Clone();
                     fdCopy.ParentTable = this;
 
                     localFields.Add(fdCopy.AliasOrName, fdCopy);
@@ -95,10 +92,10 @@
         public override string BuildWhereExpression()
         {
             var filter = new StringBuilder();
-            
+
             var leftTableFilter = LeftTable.BuildWhereExpression();
             var rightTableFilter = RightTable.BuildWhereExpression();
-            
+
             if (!string.IsNullOrWhiteSpace(leftTableFilter) || !string.IsNullOrWhiteSpace(rightTableFilter))
             {
                 if (!string.IsNullOrWhiteSpace(leftTableFilter))
@@ -123,7 +120,8 @@
         {
             var fields = string.Join(
                 ", ",
-                LeftTable.Fields.Values.Select(f => f.BuildSql()).Concat(RightTable.Fields.Values.Select(f => f.BuildSql())));
+                LeftTable.Fields.Values.Select(f => f.BuildSql())
+                    .Concat(RightTable.Fields.Values.Select(f => f.BuildSql())));
 
             var leftJoinField = LeftTable.PrimaryKey;
             if (leftJoinField == null)
@@ -132,10 +130,13 @@
             }
 
             // we are looking for an FK that references the 'leftJoinField' (comparison by the name/alias)
-            var rightJoinField = RightTable.ForeignKeys.SingleOrDefault(fd => fd.ForeignKeyReference.AliasOrName == leftJoinField.AliasOrName);
+            var rightJoinField =
+                RightTable.ForeignKeys.SingleOrDefault(
+                    fd => fd.ForeignKeyReference.AliasOrName == leftJoinField.AliasOrName);
             if (rightJoinField == null)
             {
-                throw new InvalidOperationException("Right table does not have a foreign key that references the left table: " + RightTable.Name);
+                throw new InvalidOperationException(
+                    "Right table does not have a foreign key that references the left table: " + RightTable.Name);
             }
 
             var joinExpression = string.Format(
