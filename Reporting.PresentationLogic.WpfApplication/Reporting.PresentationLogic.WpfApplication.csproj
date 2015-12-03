@@ -64,12 +64,32 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="..\..\OrdersPlanApp\OrdersPlanApp.MvvmLight\OrdersPlanApp.MvvmLight\Commands\AsyncRelayCommand.cs">
+      <Link>Commands\AsyncRelayCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\..\OrdersPlanApp\OrdersPlanApp.MvvmLight\OrdersPlanApp.MvvmLight\Commands\RelayCommand.cs">
+      <Link>Commands\RelayCommand.cs</Link>
+    </Compile>
+    <Compile Include="..\..\OrdersPlanApp\OrdersPlanApp.MvvmLight\OrdersPlanApp.MvvmLight\ViewModel\ButtonViewModel.cs">
+      <Link>ViewModel\ButtonViewModel.cs</Link>
+    </Compile>
+    <Compile Include="..\..\OrdersPlanApp\OrdersPlanApp.MvvmLight\OrdersPlanApp.MvvmLight\ViewModel\ListCollectionViewExtensions.cs">
+      <Link>ViewModel\ListCollectionViewExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\OrdersPlanApp\OrdersPlanApp.MvvmLight\OrdersPlanApp.MvvmLight\ViewModel\NotifyDataErrorInfoViewModelBase.cs">
+      <Link>ViewModel\NotifyDataErrorInfoViewModelBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\OrdersPlanApp\OrdersPlanApp.MvvmLight\OrdersPlanApp.MvvmLight\ViewModel\XceedDialogService.cs">
+      <Link>ViewModel\XceedDialogService.cs</Link>
+    </Compile>
+    <Compile Include="AssemblyInfoConstants.cs" />
     <Compile Include="TimestampFilterForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="TimestampFilterForm.Designer.cs">
       <DependentUpon>TimestampFilterForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -189,6 +209,53 @@
         </Reference>
         <Reference Include="Xceed.Wpf.Toolkit">
           <HintPath>..\packages\Extended.Wpf.Toolkit\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v3.5'">
+      <ItemGroup>
+        <Reference Include="log4net">
+          <HintPath>..\packages\log4net\lib\net35-client\log4net.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.0'">
+      <ItemGroup>
+        <Reference Include="log4net">
+          <HintPath>..\packages\log4net\lib\net40-client\log4net.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.0'">
+      <ItemGroup>
+        <Reference Include="log4net">
+          <HintPath>..\packages\log4net\lib\net40-full\log4net.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v2.0' Or $(TargetFrameworkVersion) == 'v3.0')">
+      <ItemGroup>
+        <Reference Include="log4net">
+          <HintPath>..\packages\log4net\lib\net20-full\log4net.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6')">
+      <ItemGroup>
+        <Reference Include="log4net">
+          <HintPath>..\packages\log4net\lib\net45-full\log4net.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

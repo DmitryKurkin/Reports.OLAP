@@ -7,6 +7,7 @@
     using RadarSoft.Common;
 
     using Reporting.BusinessLogic;
+    using Reporting.PresentationLogic.WpfApplication.ViewModel;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -18,6 +19,8 @@
         public MainWindow()
         {
             InitializeComponent();
+
+            Closing += (s, e) => ViewModelLocator.Cleanup();
         }
 
         private void ButtonConfigCube_OnClick(object sender, RoutedEventArgs e)

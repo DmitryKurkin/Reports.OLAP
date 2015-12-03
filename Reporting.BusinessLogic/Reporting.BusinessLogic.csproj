@@ -40,6 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Reporting.PresentationLogic.WpfApplication\AssemblyInfoConstants.cs">
+      <Link>AssemblyInfoConstants.cs</Link>
+    </Compile>
     <Compile Include="CubeConfigurationFile.cs" />
     <Compile Include="DataSetBuilder.cs" />
     <Compile Include="DataSetConfigurationFile.cs" />
