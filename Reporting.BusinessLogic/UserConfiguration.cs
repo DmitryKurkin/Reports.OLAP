@@ -33,11 +33,14 @@
 
             var doc = XDocument.Parse(contents);
 
-            var dataSetFiles = from dsc in doc.Root.Elements("DataSetConfig")
+            var dataSetFiles = from dsc in doc.Root?.Elements("DataSetConfig")
                 select new DataSetConfigurationFile(
+                    (string) dsc.Attribute("displayName") ?? "NAME NOT SET",
                     (string) dsc.Attribute("file"),
                     from cc in dsc.Elements("CubeConfig")
-                    select new CubeConfigurationFile((string) cc.Attribute("file")));
+                    select new CubeConfigurationFile(
+                        (string) cc.Attribute("displayName") ?? "NAME NOT SET",
+                        (string) cc.Attribute("file")));
 
             return new UserConfiguration(dataSetFiles);
         }
@@ -70,10 +73,12 @@
                 select new XElement(
                     "DataSetConfig",
                     new XAttribute("file", dsf.FilePath),
+                    new XAttribute("displayName", dsf.DisplayName),
                     from cf in dsf.CubeFiles
                     select new XElement(
                         "CubeConfig",
-                        new XAttribute("file", cf.FilePath)));
+                        new XAttribute("file", cf.FilePath),
+                        new XAttribute("displayName", cf.DisplayName)));
 
             new XDocument(new XElement("UserConfig", dataSetConfigTags.ToArray())).Save(path);
         }
