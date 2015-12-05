@@ -7,8 +7,8 @@
         <ResourceDictionary>
 
             <ResourceDictionary.MergedDictionaries>
-                <!--<ResourceDictionary Source="Skins/MainSkin.xaml"/>
-                <ResourceDictionary Source="Resources/StringsDictionary.xaml"/>
+                <ResourceDictionary Source="Skins/MainSkin.xaml"/>
+                <!--<ResourceDictionary Source="Resources/StringsDictionary.xaml"/>
                 <ResourceDictionary Source="Resources/SettingsDictionary.xaml"/>-->
             </ResourceDictionary.MergedDictionaries>
 

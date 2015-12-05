@@ -1,6 +1,8 @@
 <Cube
 	versionMajor="0"
-	versionMinor="16">
+	versionMinor="16"
+	connectionString="Dsn=POS;uid=USERID;pwd=PASSWORD;"
+	userName="USERID">
 	
 	<DataSet>
 		<Table name="CLIENTGROUP">

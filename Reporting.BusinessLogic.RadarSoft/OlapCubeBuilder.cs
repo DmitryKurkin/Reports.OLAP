@@ -6,10 +6,10 @@
     using System.Data;
     using System.Xml.Linq;
 
-    using RadarSoft.Common;
-    using RadarSoft.WinForms;
-    using RadarSoft.WinForms.Desktop;
-
+    using RadarSoft.RadarCube.WPF;
+    using RadarSoft.RadarCube.WPF.Common;
+    using RadarSoft.RadarCube.WPF.Desktop;
+    
     /// <summary>
     /// Contains a method that allows to build a <see cref="TOLAPCube"/>
     /// </summary>

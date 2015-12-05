@@ -3,48 +3,68 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:rs="clr-namespace:RadarSoft.WinForms.Analysis;assembly=RadarSoft.WinForms"
+        xmlns:xceed="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
+        xmlns:rs="clr-namespace:RadarSoft.RadarCube.WPF.Analysis;assembly=RadarSoft.RadarCube.WPF"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
         Title="MainWindow"
         Height="350"
-        Width="525">
+        Width="525"
+        DataContext="{Binding MainVm, Source={StaticResource Locator}}">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding ViewLoadVm.Command}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
+        <xceed:BusyIndicator Grid.Row="0" IsBusy="{Binding IsBusy}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-            <Button Grid.Column="0" Content="Config cube" Click="ButtonConfigCube_OnClick"/>
-            
-            <Button Grid.Column="1" Content="Save cube" Click="ButtonSaveCube_OnClick"/>
-            
-            <Button Grid.Column="2" Content="Load cube" Click="ButtonLoadCube_OnClick"/>
-        </Grid>
-        
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            
-            <RadioButton Grid.Column="0" GroupName="ModeType" Content="Normal" Checked="ToggleButtonNormal_OnChecked"/>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
 
-            <RadioButton Grid.Column="1" GroupName="ModeType" Content="Expert" Checked="ToggleButtonExpert_OnChecked"/>
-        </Grid>
-        
-        <WindowsFormsHost Grid.Row="2">
-            <rs:TOLAPAnalysis x:Name="TolapAnalysis"/>
-        </WindowsFormsHost>
+                    <StackPanel Grid.Column="0">
+                        <Label Content="Data sets:"/>
+                        <ListView ItemsSource="{Binding DataSetConfigFiles, ValidatesOnNotifyDataErrors=True, NotifyOnValidationError=True}" IsSynchronizedWithCurrentItem="True" HorizontalContentAlignment="Stretch"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1">
+                        <Label Content="Cubes:"/>
+                        <ListView ItemsSource="{Binding CubeConfigFiles, ValidatesOnNotifyDataErrors=True, NotifyOnValidationError=True}" IsSynchronizedWithCurrentItem="True" HorizontalContentAlignment="Stretch"/>
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="1" Content="Load" Command="{Binding CubeLoadVm.Command}" CommandParameter="{Binding ElementName=TolapAnalysis}"/>
+                    <Button Grid.Column="2" Content="Save" Command="{Binding CubeSaveVm.Command}" CommandParameter="{Binding ElementName=TolapAnalysis}"/>
+                    <Button Grid.Column="3" Content="Save As..." Command="{Binding CubeSaveAsVm.Command}" CommandParameter="{Binding ElementName=TolapAnalysis}"/>
+                    <Button Grid.Column="4" Content="Delete" Command="{Binding CubeDeleteVm.Command}" CommandParameter="{Binding ElementName=TolapAnalysis}"/>
+                </Grid>
+            </Grid>
+        </xceed:BusyIndicator>
+
+        <rs:TOLAPAnalysis Grid.Row="1" x:Name="TolapAnalysis"/>
     </Grid>
 </Window>

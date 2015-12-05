@@ -1,21 +1,12 @@
-﻿/*
-  In App.xaml:
-  <Application.Resources>
-      <vm:ViewModelLocatorTemplate xmlns:vm="clr-namespace:OrdersPlanApp.MvvmLight.ViewModel"
-                                   x:Key="Locator" />
-  </Application.Resources>
-  
-  In the View:
-  DataContext="{Binding Source={StaticResource Locator}, Path=ViewModelName}"
-*/
-
-namespace Reporting.PresentationLogic.WpfApplication.ViewModel
+﻿namespace Reporting.PresentationLogic.WpfApplication.ViewModel
 {
     using GalaSoft.MvvmLight;
     using GalaSoft.MvvmLight.Ioc;
     using GalaSoft.MvvmLight.Views;
 
     using Microsoft.Practices.ServiceLocation;
+
+    using Reporting.BusinessLogic;
 
     public class ViewModelLocator
     {
@@ -80,10 +71,13 @@ namespace Reporting.PresentationLogic.WpfApplication.ViewModel
             //SimpleIoc.Default.Register<ViewModelBase>(() => SimpleIoc.Default.GetInstance<OfflineViewModel>(),
             //    ViewConstants.Offline);
 
-            //SimpleIoc.Default.Register<MainViewModel>(true);
+            SimpleIoc.Default.Register<IDatabaseBridge, OdbcDatabaseBridge>();
+            SimpleIoc.Default.Register<IExternalFilterProvider, PrimitiveExternalFilterProvider>();
+
+            SimpleIoc.Default.Register<MainViewModel>();
         }
 
-        //public MainViewModel MainVm => ServiceLocator.Current.GetInstance<MainViewModel>();
+        public MainViewModel MainVm => ServiceLocator.Current.GetInstance<MainViewModel>();
 
         public static void Cleanup()
         {

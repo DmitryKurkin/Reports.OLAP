@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="UserConfigurationFile" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Main.xml</Value>
+      <Value Profile="(Default)">..\..\..\InputData\UserConfig.xml</Value>
     </Setting>
   </Settings>
 </SettingsFile>

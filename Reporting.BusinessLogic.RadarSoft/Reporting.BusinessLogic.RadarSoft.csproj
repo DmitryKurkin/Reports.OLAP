@@ -30,20 +30,24 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="RadarSoft.WinForms">
-      <HintPath>..\packages\RadarSoft\RadarSoft.WinForms.dll</HintPath>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="RadarSoft.RadarCube.WPF">
+      <HintPath>..\packages\RadarSoft\RadarSoft.RadarCube.WPF.dll</HintPath>
     </Reference>
-    <Reference Include="RadarSoft.WinForms.Desktop">
-      <HintPath>..\packages\RadarSoft\RadarSoft.WinForms.Desktop.dll</HintPath>
+    <Reference Include="RadarSoft.RadarCube.WPF.Desktop">
+      <HintPath>..\packages\RadarSoft\RadarSoft.RadarCube.WPF.Desktop.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Reporting.PresentationLogic.WpfApplication\AssemblyInfoConstants.cs">

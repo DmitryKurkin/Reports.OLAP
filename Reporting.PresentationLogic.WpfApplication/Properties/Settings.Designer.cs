@@ -25,7 +25,7 @@ namespace Reporting.PresentationLogic.WpfApplication.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Main.xml")]
+        [global::System.Configuration.DefaultSettingValueAttribute("..\\..\\..\\InputData\\UserConfig.xml")]
         public string UserConfigurationFile {
             get {
                 return ((string)(this["UserConfigurationFile"]));

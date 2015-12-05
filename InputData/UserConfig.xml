@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserConfig>
+  <DataSetConfig file="..\..\..\InputData\ClientGroupToPayment.xml" displayName="Client Group To Payment">
+    <CubeConfig file="..\..\..\InputData\ClientGroupToPayment_Cube0.xml" displayName="Simple cube config" />
+    <CubeConfig file="C:\Users\оп\Documents\Repos\Reports.OLAP\InputData\ClientGroupToPayment_Cube2.xml" displayName="New cube config" />
+  </DataSetConfig>
+  <DataSetConfig file="..\..\..\InputData\DiscountToCheckItem.xml" displayName="Discount To Check Item">
+  </DataSetConfig>
+  <DataSetConfig file="..\..\..\InputData\ItemGroupToCheckItem.xml" displayName="Item Group To Check Item">
+  </DataSetConfig>
+  <DataSetConfig file="..\..\..\InputData\PreviouslyFailingItemGroupToCheckItem2.xml" displayName="Previously Failing Item Group To Check Item 2">
+  </DataSetConfig>
+  <DataSetConfig file="..\..\..\InputData\Сводный отчёт по товарам (группировка по группам).xml" displayName="Сводный отчёт по товарам (группировка по группам)">
+  </DataSetConfig>
+</UserConfig>

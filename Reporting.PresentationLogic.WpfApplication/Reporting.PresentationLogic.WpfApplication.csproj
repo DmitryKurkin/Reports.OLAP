@@ -35,11 +35,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="RadarSoft.WinForms">
-      <HintPath>..\packages\RadarSoft\RadarSoft.WinForms.dll</HintPath>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.0.5022.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\RadarSoft\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
-    <Reference Include="RadarSoft.WinForms.Desktop">
-      <HintPath>..\packages\RadarSoft\RadarSoft.WinForms.Desktop.dll</HintPath>
+    <Reference Include="RadarSoft.RadarCube.WPF">
+      <HintPath>..\packages\RadarSoft\RadarSoft.RadarCube.WPF.dll</HintPath>
+    </Reference>
+    <Reference Include="RadarSoft.RadarCube.WPF.Desktop">
+      <HintPath>..\packages\RadarSoft\RadarSoft.RadarCube.WPF.Desktop.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -89,6 +93,7 @@
     <Compile Include="TimestampFilterForm.Designer.cs">
       <DependentUpon>TimestampFilterForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -102,6 +107,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Skins\MainSkin.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="OdbcDatabaseBridge.cs" />
