@@ -51,8 +51,10 @@
     <Compile Include="FieldDescriptor.cs" />
     <Compile Include="IDatabaseBridge.cs" />
     <Compile Include="IExternalFilterProvider.cs" />
-    <Compile Include="JoinDescriptor.cs" />
+    <Compile Include="LinkDescriptor.cs" />
+    <Compile Include="MultiJoinDescriptor.cs" />
     <Compile Include="TableDescriptor.cs" />
+    <Compile Include="TableDescriptorExtensions.cs" />
     <Compile Include="UserConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

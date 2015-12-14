@@ -12,4 +12,6 @@
   </DataSetConfig>
   <DataSetConfig file="..\..\..\InputData\Сводный отчёт по товарам (группировка по группам).xml" displayName="Сводный отчёт по товарам (группировка по группам)">
   </DataSetConfig>
+  <DataSetConfig file="..\..\..\InputData\TestMultiJoin.xml" displayName="Test Multi Join">
+  </DataSetConfig>
 </UserConfig>

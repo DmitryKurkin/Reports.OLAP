@@ -4,9 +4,15 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    /// <summary>
+    /// Represents a data set definition
+    /// </summary>
     public class DataSetDescriptor
     {
-        private readonly Dictionary<string, TableDescriptor> _tables;
+        /// <summary>
+        /// The data set tables
+        /// </summary>
+        private readonly Dictionary<string, TableDescriptor> _tables = new Dictionary<string, TableDescriptor>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataSetDescriptor"/> class
@@ -17,8 +23,6 @@
         {
             if (connectionString == null) throw new ArgumentNullException(nameof(connectionString));
             if (userName == null) throw new ArgumentNullException(nameof(userName));
-
-            _tables = new Dictionary<string, TableDescriptor>();
 
             ConnectionString = connectionString;
             UserName = userName;
@@ -34,19 +38,26 @@
         /// </summary>
         public string UserName { get; }
 
-        public IReadOnlyDictionary<string, TableDescriptor> Tables
-        {
-            get { return _tables; }
-        }
+        /// <summary>
+        /// Gets the data set tables
+        /// </summary>
+        public IReadOnlyDictionary<string, TableDescriptor> Tables => _tables;
 
+        /// <summary>
+        /// Adds the specified table to the data set
+        /// </summary>
+        /// <param name="table">The table to add</param>
         public void AddTable(TableDescriptor table)
         {
+            if (table == null) throw new ArgumentNullException(nameof(table));
+
             _tables.Add(table.Name, table);
         }
 
-        public string BuildSql()
-        {
-            return string.Join("; ", _tables.Values.Select(td => td.BuildSql()));
-        }
+        /// <summary>
+        /// Returns a (partial) SQL query that represents the current entity
+        /// </summary>
+        /// <returns>A (partial) SQL query that represents the current entity</returns>
+        public string BuildSql() => string.Join("; ", _tables.Values.Select(td => td.BuildSql()));
     }
 }

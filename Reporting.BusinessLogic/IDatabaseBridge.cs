@@ -1,5 +1,7 @@
 ﻿namespace Reporting.BusinessLogic
 {
+    // TODO: replace with DataAdapter
+
     using System.Data;
     using System.Data.Common;
 

@@ -80,7 +80,7 @@
                         new XAttribute("file", cf.FilePath),
                         new XAttribute("displayName", cf.DisplayName)));
 
-            new XDocument(new XElement("UserConfig", dataSetConfigTags.ToArray())).Save(path);
+            new XDocument(new XElement("UserConfig", dataSetConfigTags.Cast<object>().ToArray())).Save(path);
         }
     }
 }

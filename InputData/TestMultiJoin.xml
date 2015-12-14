@@ -1,0 +1,86 @@
+<Cube
+	versionMajor="0"
+	versionMinor="17"
+	connectionString="Dsn=POS;uid=USERID;pwd=PASSWORD;"
+	userName="USERID">
+	
+	<DataSet>
+	<!--
+	SELECT
+		ROW_NUMBER() OVER() as CCCID,
+		CHECK.CHECKID,
+		CHECK.TOTAL,
+		CHECKITEM.CHECKITEMID,
+		CHECKITEM.ITEMID,
+		CHECKITEM.TOTAL AS CHECKITEM_TOTAL,
+		TIMESTAMP(CHECKITEM.TIME) AS TIME_TS,
+		CONCAT(TRIM(L '0' FROM CHAR(CHECKITEM.PRICE)), CONCAT(', ', CAST((SELECT NAME FROM MEASURE WHERE MEASUREID = CHECKITEM.MEASUREID) AS CHAR(10)))) AS PRICEMEASURE,
+		CHECKPAYMENT.PAYMENTID,
+		CHECKPAYMENT.TOTAL AS CHECKPAYMENT_TOTAL
+	FROM
+		CHECK LEFT OUTER JOIN CHECKITEM
+			ON CHECKITEM.CHECKID = CHECK.CHECKID
+		LEFT OUTER JOIN CHECKPAYMENT
+			ON CHECKPAYMENT.CHECKID = CHECK.CHECKID
+	FETCH FIRST 1000 ROWS ONLY
+	-->
+		<MultiJoin alias="CHECK_CHECKITEM_CHECKPAYMENT" primaryKey="CCCID" maxRows="1000">
+			<Tables>
+				<Table name="CHECK" primaryKey="CHECKID">
+		        	<Field name="TOTAL"/>
+			    </Table>
+			    <Table name="CHECKITEM" primaryKey="CHECKITEMID">
+			    	<Field name="ITEMID" references="ITEM"/>
+		        	<Field name="TOTAL" alias="CHECKITEM_TOTAL"/>
+		        	<Field name="TIME" function="TIMESTAMP(#)" alias="TIME_TS"/>
+		        	<Field name="PRICE" function="CONCAT(TRIM(L '0' FROM CHAR(#)), CONCAT(', ', CAST((SELECT NAME FROM MEASURE WHERE MEASUREID = CHECKITEM.MEASUREID) AS CHAR(10))))" alias="PRICEMEASURE"/>
+			    </Table>
+		    	<Table name="CHECKPAYMENT" primaryKey="PAYMENTID">
+		        	<Field name="TOTAL" alias="CHECKPAYMENT_TOTAL"/>
+		    	</Table>
+			</Tables>
+			<Links>
+				<Link table="CHECK"/>
+				<Link table="CHECKITEM" fromKey="CHECKID" toKey="CHECK.CHECKID"/>
+				<Link table="CHECKPAYMENT" fromKey="CHECKID" toKey="CHECK.CHECKID"/>
+			</Links>
+		</MultiJoin>
+		<Table name="ITEM" primaryKey="ITEMID">
+			<Field name="ITEMGROUPID" references="ITEMGROUP"/>
+			<Field name="NAME" function="CONCAT(#, CONCAT(' - ', CAST(CODE AS CHAR(10))))" alias="CUSTOMNAME"/>
+			<Field name="CODE"/>
+		</Table>
+		<Table name="ITEMGROUP" primaryKey="ITEMGROUPID">
+			<Field name="PARENTITEMGROUPID" references="ITEMGROUP"/>
+			<Field name="NAME" function="CONCAT(#, CONCAT(' - ', CAST(CODE AS CHAR(10))))" alias="CUSTOMNAME"/>
+			<Field name="SHORTNAME"/>
+			<Field name="CODE"/>
+		</Table>
+	</DataSet>
+	
+	<Measures>
+		<Measure sourceTable="CHECK_CHECKITEM_CHECKPAYMENT" sourceField="TOTAL" displayName="Сумма (Чек)" format="#,0.00 рублей"/>
+		<Measure sourceTable="CHECK_CHECKITEM_CHECKPAYMENT" sourceField="CHECKITEM_TOTAL" displayName="Сумма (Элемент чека)" format="#,0.00 рублей"/>
+		<Measure sourceTable="CHECK_CHECKITEM_CHECKPAYMENT" sourceField="CHECKPAYMENT_TOTAL" displayName="Сумма (Платёж чека)" format="#,0.00 рублей"/>
+	</Measures>
+	
+	<Dimentions>
+		<Dimention name="Names" displayName="Группы и товары">
+			<Multilevel name="Имя группы-Имя товара">
+				<Hierarchy sourceTable="ITEMGROUP" sourceField="CUSTOMNAME" displayName="Имя группы"/>
+				<Hierarchy sourceTable="ITEM" sourceField="CUSTOMNAME" displayName="Имя товара"/>
+			</Multilevel>
+
+			<Multilevel name="Имя товара - единица измерения">
+				<Hierarchy sourceTable="ITEM" sourceField="CUSTOMNAME" displayName="Товар"/>
+				<Hierarchy sourceTable="CHECK_CHECKITEM_CHECKPAYMENT" sourceField="PRICEMEASURE" displayName="Цена, ед. изм"/>
+			</Multilevel>
+
+			<Hierarchy sourceTable="ITEMGROUP" sourceField="SHORTNAME" parentChildBy="PARENTITEMGROUPID" displayName="Группа (Псевдоним)"/>
+		</Dimention>
+  		
+		<Dimention name="CheckitemDate" displayName="Дата">
+			<Hierarchy sourceTable="CHECK_CHECKITEM_CHECKPAYMENT" sourceField="TIME_TS" displayName="Дата"/>
+		</Dimention>
+	</Dimentions>
+</Cube>

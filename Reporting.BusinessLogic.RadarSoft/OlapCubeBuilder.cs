@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Data;
     using System.Xml.Linq;
 
@@ -130,8 +129,10 @@
                                 DisplayMode = AttributeDispalyMode.AsColumn,
                                 DisplayName = displayName,
                                 SourceField = sourceField,
-                                SourceFieldType =
-                                    _dataSet.Tables[(string) h.Attribute("sourceTable")].Columns[sourceField].DataType
+                                SourceFieldType = _dataSet
+                                    .Tables[(string) h.Attribute("sourceTable")]
+                                    .Columns[sourceField]
+                                    .DataType
                             };
                             hierarchy.InfoAttributes.Add(att);
                         }
@@ -144,6 +145,13 @@
             return _cube;
         }
 
+        /// <summary>
+        /// Returns a <see cref="TCubeHierarchy"/> (BI or Parent-Child or Simple) for the specified <see cref="TCubeDimension"/> using the specified parameters
+        /// </summary>
+        /// <param name="dimentionName">The name of the <see cref="TCubeDimension"/> to use</param>
+        /// <param name="dimention">The <see cref="TCubeDimension"/> to use</param>
+        /// <param name="h">The element to read the attributes from</param>
+        /// <returns>A <see cref="TCubeHierarchy"/> (BI or Parent-Child or Simple) for the specified <see cref="TCubeDimension"/> using the specified parameters</returns>
         private TCubeHierarchy CreateHierarchy(
             string dimentionName,
             TCubeDimension dimention,
@@ -195,21 +203,18 @@
             {
                 #region Add either a Parent-Child or a simple hierarchy
 
-                var isSelfReference = (string) h.Attribute("selfReference") == "true";
+                var parentChildBy = (string) h.Attribute("parentChildBy");
 
-                if (isSelfReference)
+                if (parentChildBy != null)
                 {
-                    var parentField = _dataSetDescriptor.Tables[sourceTable].ForeignKeys.Single(
-                        fd => fd.ForeignKeyReference.ParentTable.Name == sourceTable).AliasOrName;
-
                     hierarchy = _cube.AddHierarchy(
                         dimention.DisplayName,
                         _dataSet.Tables[sourceTable],
                         sourceField,
-                        parentField,
+                        parentChildBy,
                         displayName);
 
-                    hierarchy.IDField = _dataSetDescriptor.Tables[sourceTable].PrimaryKey.AliasOrName;
+                    hierarchy.IDField = _dataSetDescriptor.Tables[sourceTable].GetPrimaryKey().AliasOrName;
                     hierarchy.IDFieldType = _dataSet.Tables[sourceTable].Columns[hierarchy.IDField].DataType;
                 }
                 else

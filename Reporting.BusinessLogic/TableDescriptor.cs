@@ -1,91 +1,98 @@
 ﻿namespace Reporting.BusinessLogic
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
 
+    /// <summary>
+    /// Represents a table definition
+    /// </summary>
     public class TableDescriptor
     {
-        private readonly Dictionary<string, FieldDescriptor> _fields;
+        /// <summary>
+        /// The table fields
+        /// </summary>
+        private readonly Dictionary<string, FieldDescriptor> _fields = new Dictionary<string, FieldDescriptor>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TableDescriptor"/> class
+        /// </summary>
+        /// <param name="name">The name of the table</param>
+        /// <param name="filter">The filter applied to the table (if any)</param>
         public TableDescriptor(string name, string filter = null)
         {
+            if (name == null) throw new ArgumentNullException(nameof(name));
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("The name cannot be empty", nameof(name));
+
             Name = name;
             Filter = filter;
-
-            _fields = new Dictionary<string, FieldDescriptor>();
-            SuppressForeignKeys = new List<string>();
         }
 
-        public string Name { get; private set; }
+        /// <summary>
+        /// Gets the name of the table
+        /// </summary>
+        public string Name { get; }
 
-        public string Filter { get; private set; }
+        /// <summary>
+        /// Gets the filter applied to the table (if any)
+        /// </summary>
+        public string Filter { get; }
 
-        public virtual IReadOnlyDictionary<string, FieldDescriptor> Fields
-        {
-            get { return _fields; }
-        }
+        /// <summary>
+        /// Gets the table fields
+        /// </summary>
+        public virtual IReadOnlyDictionary<string, FieldDescriptor> Fields => _fields;
 
-        public virtual FieldDescriptor PrimaryKey
-        {
-            get { return _fields.Values.SingleOrDefault(fd => fd.IsPrimaryKey); }
-        }
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        /// A string that represents the current object.
+        /// </returns>
+        /// <filterpriority>2</filterpriority>
+        public override string ToString() => $"TABLE: {Name}";
 
-        public virtual IEnumerable<FieldDescriptor> ForeignKeys
-        {
-            get { return _fields.Values.Where(fd => fd.ForeignKeyReference != null); }
-        }
-
-        public virtual List<string> SuppressForeignKeys { get; private set; }
-
-        public override string ToString()
-        {
-            return string.Format("TABLE: {0}", Name);
-        }
-
+        /// <summary>
+        /// Adds the specified field to the table
+        /// </summary>
+        /// <param name="field">The field to add</param>
         public virtual void AddField(FieldDescriptor field)
         {
+            if (field == null) throw new ArgumentNullException(nameof(field));
+
             _fields.Add(field.Name, field);
 
             field.ParentTable = this;
         }
 
+        /// <summary>
+        /// Returns the WHERE SQL predicate of the table
+        /// </summary>
+        /// <returns>The WHERE SQL predicate of the table</returns>
         public virtual string BuildWhereExpression()
         {
-            var whereClause = new StringBuilder();
+            var whereExpression = string.Join(
+                " AND ",
+                new[] {Filter}.Union(_fields.Values.Select(fd => fd.Filter))
+                    .Where(expr => !string.IsNullOrWhiteSpace(expr)));
 
-            var fieldsFilters = _fields.Values.Where(fd => fd.Filter != null).Select(fd => fd.Filter).ToArray();
-
-            if (Filter != null || fieldsFilters.Length > 0)
-            {
-                if (Filter != null)
-                {
-                    whereClause.Append(Filter);
-                }
-
-                if (fieldsFilters.Length > 0)
-                {
-                    if (Filter != null)
-                    {
-                        whereClause.Append(" AND ");
-                    }
-
-                    whereClause.Append(string.Join(" AND ", fieldsFilters));
-                }
-            }
-
-            return whereClause.ToString();
+            return whereExpression;
         }
 
+        /// <summary>
+        /// Returns a (partial) SQL query that represents the current entity
+        /// </summary>
+        /// <returns>A (partial) SQL query that represents the current entity</returns>
         public virtual string BuildSql()
         {
-            var whereExpression = BuildWhereExpression();
+            var fields = string.Join(", ", _fields.Values.Select(f => f.BuildSql()));
 
-            var sql = string.Format(
-                "SELECT {0} FROM {1}{2}",
-                string.Join(", ", _fields.Values.Select(f => f.BuildSql())),
-                Name,
-                string.IsNullOrWhiteSpace(whereExpression) ? string.Empty : string.Format(" WHERE {0}", whereExpression));
+            var whereExpression = BuildWhereExpression();
+            var whereClause = string.IsNullOrWhiteSpace(whereExpression)
+                ? string.Empty
+                : $" WHERE {whereExpression}";
+
+            var sql = $"SELECT {fields} FROM {Name}{whereClause}";
 
             return sql;
         }
