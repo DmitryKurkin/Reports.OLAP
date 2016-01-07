@@ -4,14 +4,9 @@
     <CubeConfig file="..\..\..\InputData\ClientGroupToPayment_Cube0.xml" displayName="Simple cube config" />
     <CubeConfig file="C:\Users\оп\Documents\Repos\Reports.OLAP\InputData\ClientGroupToPayment_Cube2.xml" displayName="New cube config" />
   </DataSetConfig>
-  <DataSetConfig file="..\..\..\InputData\DiscountToCheckItem.xml" displayName="Discount To Check Item">
-  </DataSetConfig>
-  <DataSetConfig file="..\..\..\InputData\ItemGroupToCheckItem.xml" displayName="Item Group To Check Item">
-  </DataSetConfig>
-  <DataSetConfig file="..\..\..\InputData\PreviouslyFailingItemGroupToCheckItem2.xml" displayName="Previously Failing Item Group To Check Item 2">
-  </DataSetConfig>
-  <DataSetConfig file="..\..\..\InputData\Сводный отчёт по товарам (группировка по группам).xml" displayName="Сводный отчёт по товарам (группировка по группам)">
-  </DataSetConfig>
-  <DataSetConfig file="..\..\..\InputData\TestMultiJoin.xml" displayName="Test Multi Join">
-  </DataSetConfig>
+  <DataSetConfig file="..\..\..\InputData\DiscountToCheckItem.xml" displayName="Discount To Check Item" />
+  <DataSetConfig file="..\..\..\InputData\ItemGroupToCheckItem.xml" displayName="Item Group To Check Item" />
+  <DataSetConfig file="..\..\..\InputData\PreviouslyFailingItemGroupToCheckItem2.xml" displayName="Previously Failing Item Group To Check Item 2" />
+  <DataSetConfig file="..\..\..\InputData\Сводный отчёт по товарам (группировка по группам).xml" displayName="Сводный отчёт по товарам (группировка по группам)" />
+  <DataSetConfig file="..\..\..\InputData\TestMultiJoin.xml" displayName="Test Multi Join" />
 </UserConfig>

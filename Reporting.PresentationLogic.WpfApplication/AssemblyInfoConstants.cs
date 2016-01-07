@@ -8,7 +8,7 @@
         /// <summary>
         /// The version
         /// </summary>
-        public const string Version = "0.0.0.2";
+        public const string Version = "0.0.0.3";
 
         /// <summary>
         /// The company
@@ -28,7 +28,7 @@
         /// <summary>
         /// The copyright
         /// </summary>
-        public const string Copyright = "Copyright © AversTech 2015";
+        public const string Copyright = "Copyright © AversTech 2016";
 
         /// <summary>
         /// The trademark

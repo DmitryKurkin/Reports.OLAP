@@ -7,7 +7,7 @@
     using System.Xml.Linq;
 
     using Microsoft.Win32;
-    
+
     using OrdersPlanApp.MvvmLight.Commands;
     using OrdersPlanApp.MvvmLight.ViewModel;
 
@@ -38,6 +38,16 @@
         private bool _isCubeLoaded;
 
         /// <summary>
+        /// The currently loaded data set config
+        /// </summary>
+        private DataSetConfigurationFile _currentDataSetConfig;
+
+        /// <summary>
+        /// The currently loaded cube config
+        /// </summary>
+        private CubeConfigurationFile _currentCubeConfig;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="MainViewModel"/> class
         /// </summary>
         /// <param name="dbBridge">The database bridge</param>
@@ -50,8 +60,6 @@
             _dbBridge = dbBridge;
             DataSetDescriptorBuilder.FilterProvider = externalFilterProvider;
 
-            DataSetConfigFiles.CurrentChanged += DataSetConfigFiles_CurrentChanged;
-
             ViewLoadVm = new ButtonViewModel
             {
                 Command = new AsyncRelayCommand(
@@ -61,65 +69,37 @@
                     o => IsBusy = false)
             };
 
-            CubeLoadVm = new ButtonViewModel
-            {
-                Command = new AsyncRelayCommand(
-                    o => DoLoadCube((TOLAPAnalysis) o),
-                    o => !IsBusy && (DataSetConfigFiles.CurrentItem != null || CubeConfigFiles.CurrentItem != null),
-                    o => IsBusy = true,
-                    o => IsBusy = false)
-            };
-            CubeSaveVm = new ButtonViewModel
+            SaveCubeVm = new ButtonViewModel
             {
                 Command = new AsyncRelayCommand(
                     o => DoSaveCube((TOLAPAnalysis) o),
-                    o => !IsBusy && _isCubeLoaded && CubeConfigFiles.CurrentItem != null,
+                    o => !IsBusy && _isCubeLoaded && _currentCubeConfig != null,
                     o => IsBusy = true,
                     o => IsBusy = false)
             };
-            CubeSaveAsVm = new ButtonViewModel
+            SaveCubeAsVm = new ButtonViewModel
             {
                 Command = new AsyncRelayCommand(
                     o => DoSaveCubeAs((TOLAPAnalysis) o),
-                    o => !IsBusy && _isCubeLoaded && DataSetConfigFiles.CurrentItem != null,
+                    o => !IsBusy && _isCubeLoaded && _currentDataSetConfig != null,
                     o => IsBusy = true,
                     o => IsBusy = false)
             };
-            CubeDeleteVm = new ButtonViewModel
+            DeleteCubeVm = new ButtonViewModel
             {
                 Command = new AsyncRelayCommand(
                     o => DoDeleteCube((TOLAPAnalysis) o),
-                    o => !IsBusy && _isCubeLoaded && CubeConfigFiles.CurrentItem != null,
+                    o => !IsBusy && _isCubeLoaded && _currentCubeConfig != null,
                     o => IsBusy = true,
                     o => IsBusy = false)
             };
         }
 
         /// <summary>
-        /// Unregisters this instance from the Messenger class.
-        /// <para>
-        /// To cleanup additional resources, override this method, clean
-        ///             up and then call base.Cleanup().
-        /// </para>
+        /// Gets the menu items of the available data set configuration files
         /// </summary>
-        public override void Cleanup()
-        {
-            DataSetConfigFiles.CurrentChanged -= DataSetConfigFiles_CurrentChanged;
-
-            base.Cleanup();
-        }
-
-        /// <summary>
-        /// Gets the available data set configuration files
-        /// </summary>
-        public ListCollectionView DataSetConfigFiles { get; } =
-            new ListCollectionView(new List<DataSetConfigurationFile>());
-
-        /// <summary>
-        /// Gets the available cube configuration files
-        /// </summary>
-        public ListCollectionView CubeConfigFiles { get; } =
-            new ListCollectionView(new List<CubeConfigurationFile>());
+        public ListCollectionView DataSetMenuItems { get; } =
+            new ListCollectionView(new List<MenuItemViewModel>());
 
         /// <summary>
         /// Gets the view model of the 'load view' button
@@ -127,24 +107,19 @@
         public ButtonViewModel ViewLoadVm { get; }
 
         /// <summary>
-        /// Gets the view model of the 'load cube' button
-        /// </summary>
-        public ButtonViewModel CubeLoadVm { get; }
-
-        /// <summary>
         /// Gets the view model of the 'save cube' button
         /// </summary>
-        public ButtonViewModel CubeSaveVm { get; }
+        public ButtonViewModel SaveCubeVm { get; }
 
         /// <summary>
-        /// Gets the view model of the 'save cube as' button
+        /// Gets the view model of the 'save cube as...' button
         /// </summary>
-        public ButtonViewModel CubeSaveAsVm { get; }
+        public ButtonViewModel SaveCubeAsVm { get; }
 
         /// <summary>
         /// Gets the view model of the 'delete cube' button
         /// </summary>
-        public ButtonViewModel CubeDeleteVm { get; }
+        public ButtonViewModel DeleteCubeVm { get; }
 
         /// <summary>
         /// Loads the view
@@ -153,26 +128,66 @@
         {
             _userConfiguration = UserConfiguration.Load(Settings.Default.UserConfigurationFile);
 
+            DoLoadDataSetMenu();
+        }
+
+        /// <summary>
+        /// Loads the 'Data Sets' menu items
+        /// </summary>
+        private void DoLoadDataSetMenu()
+        {
             UiAction(() =>
             {
-                CubeConfigFiles.Clear();
-                DataSetConfigFiles.Clear();
+                DataSetMenuItems.Clear();
 
-                DataSetConfigFiles.AddRange(_userConfiguration.DataSetFiles);
-                DataSetConfigFiles.MoveCurrentTo(null);
+                foreach (var dscf in _userConfiguration.DataSetFiles)
+                {
+                    var mi = new MenuItemViewModel {Header = dscf.DisplayName};
+
+                    // add the 'default' menu item
+                    mi.Subitems.AddAndCommit(new MenuItemViewModel
+                    {
+                        Header = "<Default>",
+                        Command = new AsyncRelayCommand(
+                            o => DoLoadCube(dscf, null, (TOLAPAnalysis) o),
+                            o => !IsBusy,
+                            o => IsBusy = true,
+                            o => IsBusy = false)
+                    });
+
+                    foreach (var ccf in dscf.CubeFiles)
+                    {
+                        mi.Subitems.AddAndCommit(new MenuItemViewModel
+                        {
+                            Header = ccf.DisplayName,
+                            Command = new AsyncRelayCommand(
+                                o => DoLoadCube(dscf, ccf, (TOLAPAnalysis) o),
+                                o => !IsBusy,
+                                o => IsBusy = true,
+                                o => IsBusy = false)
+                        });
+                    }
+
+                    DataSetMenuItems.AddAndCommit(mi);
+                }
             });
         }
 
         /// <summary>
         /// Loads the cube into the specified <see cref="TOLAPAnalysis"/>
         /// </summary>
+        /// <param name="dataSetConfigurationFile">The data set config file</param>
+        /// <param name="cubeConfigurationFile">The cube config file (can be null)</param>
         /// <param name="tolapAnalysis">The <see cref="TOLAPAnalysis"/> to load the cube into</param>
-        private void DoLoadCube(TOLAPAnalysis tolapAnalysis)
+        private void DoLoadCube(
+            DataSetConfigurationFile dataSetConfigurationFile,
+            CubeConfigurationFile cubeConfigurationFile,
+            TOLAPAnalysis tolapAnalysis)
         {
-            var currDataSetConfig = DataSetConfigFiles.Curr<DataSetConfigurationFile>();
-            var currCubeConfig = CubeConfigFiles.Curr<CubeConfigurationFile>();
+            _currentDataSetConfig = dataSetConfigurationFile;
+            _currentCubeConfig = cubeConfigurationFile;
 
-            var contents = File.ReadAllText(currDataSetConfig.FilePath);
+            var contents = File.ReadAllText(_currentDataSetConfig.FilePath);
 
             var dataSetDesc = DataSetDescriptorBuilder.Build(contents);
 
@@ -192,9 +207,9 @@
                 tolapAnalysis.Cube = cube;
                 tolapAnalysis.Cube.Active = true;
 
-                if (currCubeConfig != null)
+                if (_currentCubeConfig != null)
                 {
-                    tolapAnalysis.Load(currCubeConfig.FilePath);
+                    tolapAnalysis.Load(_currentCubeConfig.FilePath);
                 }
             });
 
@@ -207,11 +222,9 @@
         /// <param name="tolapAnalysis">The <see cref="TOLAPAnalysis"/> whose cube to save</param>
         private void DoSaveCube(TOLAPAnalysis tolapAnalysis)
         {
-            var currCubeConfig = CubeConfigFiles.Curr<CubeConfigurationFile>();
-
             UiAction(() =>
             {
-                tolapAnalysis.SaveUncompressed(currCubeConfig.FilePath, TStreamContent.GridState);
+                tolapAnalysis.SaveUncompressed(_currentCubeConfig.FilePath, TStreamContent.GridState);
             });
         }
 
@@ -230,21 +243,19 @@
 
             if (dlg.ShowDialog() != true) return;
 
-            var newCubeConfig = new CubeConfigurationFile("New cube config", dlg.FileName);
+            _currentCubeConfig = new CubeConfigurationFile("New cube config", dlg.FileName);
 
-            var currDataSetConfig = DataSetConfigFiles.Curr<DataSetConfigurationFile>();
-            currDataSetConfig.CubeFiles.Add(newCubeConfig);
+            _currentDataSetConfig.CubeFiles.Add(_currentCubeConfig);
 
             UiAction(() =>
             {
                 // TODO: request display name
-                tolapAnalysis.SaveUncompressed(newCubeConfig.FilePath, TStreamContent.GridState);
-
-                CubeConfigFiles.AddAndCommit(newCubeConfig);
-                CubeConfigFiles.MoveCurrentTo(newCubeConfig);
+                tolapAnalysis.SaveUncompressed(_currentCubeConfig.FilePath, TStreamContent.GridState);
             });
 
             _userConfiguration.Save(Settings.Default.UserConfigurationFile);
+
+            DoLoadDataSetMenu();
         }
 
         /// <summary>
@@ -253,39 +264,22 @@
         /// <param name="tolapAnalysis">The <see cref="TOLAPAnalysis"/> whose cube to delete</param>
         private void DoDeleteCube(TOLAPAnalysis tolapAnalysis)
         {
-            var currDataSetConfig = DataSetConfigFiles.Curr<DataSetConfigurationFile>();
-            var currCubeConfig = CubeConfigFiles.Curr<CubeConfigurationFile>();
-
-            currDataSetConfig.CubeFiles.Remove(currCubeConfig);
+            _currentDataSetConfig.CubeFiles.Remove(_currentCubeConfig);
 
             _userConfiguration.Save(Settings.Default.UserConfigurationFile);
 
             UiAction(() =>
             {
-                DataSetConfigFiles.MoveCurrentTo(null);
-
                 if (tolapAnalysis.Cube == null) return;
 
                 tolapAnalysis.Cube.Active = false;
             });
 
             _isCubeLoaded = false;
-        }
 
-        /// <summary>
-        /// Handles the <see cref="CollectionView.CurrentChanged"/> event of the <see cref="DataSetConfigFiles"/>
-        /// </summary>
-        /// <param name="sender">The event source</param>
-        /// <param name="e">The event data</param>
-        private void DataSetConfigFiles_CurrentChanged(object sender, EventArgs e)
-        {
-            CubeConfigFiles.Clear();
+            _currentCubeConfig = null;
 
-            var currDataSetConfig = DataSetConfigFiles.Curr<DataSetConfigurationFile>();
-            if (currDataSetConfig == null) return;
-
-            CubeConfigFiles.AddRange(currDataSetConfig.CubeFiles);
-            CubeConfigFiles.MoveCurrentTo(null);
+            DoLoadDataSetMenu();
         }
     }
 }
